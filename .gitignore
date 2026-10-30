@@ -1,0 +1,31 @@
+# Material privado, datos personales y contraseñas
+privado/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.secret
+*credentials*.json
+*token*.txt
+
+# Archivos compilados, temporales y del sistema
+.pio/
+build/
+*.elf
+*.hex
+*.o
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+
+# Exportaciones comprimidas o videos: conservar localmente en privado/
+*.zip
+*.mp4
+*.mov
