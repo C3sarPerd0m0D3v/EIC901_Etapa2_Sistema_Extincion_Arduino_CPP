@@ -1,71 +1,153 @@
-# EIC901 — Etapa 2: Sistema de Extinción por Votación 2 de 3 con Arduino y C++
+<div align="center">
 
-**Universidad Don Bosco · Electrónica Aplicada al Internet de las Cosas · Ciclo 02-2026**
+![Portada ilustrativa del sistema de alarma contra incendios](assets/portada.jpg)
 
-## Objetivo
+# EIC901 · Sistema de extinción por votación 2 de 3
 
-Reemplazar las compuertas 74HC04, 74HC08 y 74HC32 de la Etapa 1 por un **Arduino UNO programado en C/C++**, conservando la función de votación 2 de 3 para activar una carga inductiva mediante un transistor BJT NPN.
+### Arduino UNO R3 · C++ · Simulación en Tinkercad
+
+![Estado](https://img.shields.io/badge/PROTOTIPO-VALIDADO-12745e?style=for-the-badge)
+![Pruebas](https://img.shields.io/badge/PRUEBAS-8%2F8-136b9e?style=for-the-badge)
+![Hardware](https://img.shields.io/badge/ARDUINO-UNO%20R3-00878f?style=for-the-badge)
+![Interfaz](https://img.shields.io/badge/DIAGRAMAS-REACT%20%2B%20TYPESCRIPT-243b64?style=for-the-badge)
+
+**Universidad Don Bosco · EIC901 · Etapa 2 · Ciclo 02-2026**
+
+[**Simular circuito**](https://www.tinkercad.com/things/4VEX9vVvEAo-eic901etapa2sistemaextincionarduinocpp?sharecode=oYl9HFb9AblIeLe8uCefzoiCKroxj-k_aQ0VEF1MGRA) · [**Explorar diagramas**](web/diagramas/) · [**Código Arduino**](firmware/arduino/EIC901_Etapa2_Arduino_CPP/EIC901_Etapa2_Arduino_CPP.ino) · [**Evidencias**](capturas/04_pruebas/)
+
+</div>
+
+---
+
+## Descripción
+
+Prototipo universitario que representa un sistema de extinción para un cuarto de servidores. Tres interruptores SPDT simulan señales de detección y un **Arduino UNO R3** ejecuta la lógica de votación para activar un **LED rojo** y un **motor DC** a través de un transistor NPN.
+
+La entrada **C** representa un detector de lazo normalmente cerrado: `C=1` indica condición normal y `C=0` representa alarma o interrupción del lazo. El motor simula el actuador del sistema; no representa una instalación real certificada.
+
+## Arquitectura y diagramas
+
+![Arquitectura del sistema](documentacion/diseno/arquitectura-sistema.png)
+
+Los diagramas siguientes documentan el diseño y la lógica del prototipo; la referencia para la conexión eléctrica comprobada es el montaje de Tinkercad.
+
+| Diagrama | Visualización |
+|:--|:--|
+| **Arquitectura** | [Ver arquitectura](documentacion/diseno/arquitectura-sistema.png) |
+| **Flujo del firmware** | [Ver diagrama de flujo](documentacion/diseno/diagrama-flujo.png) |
+| **Esquema visual ilustrativo** | [Ver esquema](documentacion/diseno/esquema-electrico.png) |
+| **Tabla de verdad visual** | [Ver diagrama](documentacion/diseno/tablaDVerdad.png) |
+
+> **Alcance:** el esquema incluido es una representación gráfica documental. Para reproducir conexiones, utilizar el circuito funcional de Tinkercad y verificar eléctricamente cada nodo. No utilizar esta documentación para construir un sistema de protección contra incendios de uso real.
 
 ## Función lógica
 
-`F = (A && B) || ((!C) && (A || B));`
+\[
+F = AB + \overline{C}(A + B)
+\]
 
-- `A=1`: detector A en alarma.
-- `B=1`: detector B en alarma.
-- `C=1`: tercer detector en condición normal; `C=0`: alarma o cable abierto.
-- `F=1`: orden de activar el actuador.
+Código correspondiente:
 
-## Pines y componentes previstos
+```cpp
+int F = (A && B) || (!C && (A || B));
+```
 
-| Componente | Conexión |
-|---|---|
-| Interruptor A | D2 |
-| Interruptor B | D3 |
-| Interruptor C | D4 |
-| BJT 2N2222 | D8 → resistencia de base 1 kΩ → B |
-| LED indicador | D9 → resistencia 300 Ω → LED |
-| Motor de 5 V | Fuente adecuada, controlado por el colector del BJT |
-| Diodo 1N4007 | En paralelo con el motor: cátodo al positivo, ánodo al colector |
+### Tabla de verdad verificada
 
-Los interruptores SPDT seleccionan entre +5 V y GND mediante el terminal COM. No se necesitan pull-down externos si las dos posiciones ya definen el nivel. El emisor del BJT y todas las tierras deben estar en común; verificar orientación de terminales según el modelo del transistor.
+| A | B | C | F | LED | Motor |
+|:-:|:-:|:-:|:-:|:--|:--|
+| 0 | 0 | 0 | **0** | Apagado | Detenido |
+| 0 | 0 | 1 | **0** | Apagado | Detenido |
+| 0 | 1 | 0 | **1** | Encendido | Girando |
+| 0 | 1 | 1 | **0** | Apagado | Detenido |
+| 1 | 0 | 0 | **1** | Encendido | Girando |
+| 1 | 0 | 1 | **0** | Apagado | Detenido |
+| 1 | 1 | 0 | **1** | Encendido | Girando |
+| 1 | 1 | 1 | **1** | Encendido | Girando |
 
-**Precaución:** comprobar la corriente de arranque del motor, la capacidad de la fuente y la saturación del transistor. El cálculo de corriente de base ≈4,3 mA con 1 kΩ es una aproximación, no evidencia de conmutación correcta.
+**Resultado en Tinkercad: 8/8 combinaciones comprobadas**, con monitor serial, LED y motor.
 
-## Estado del proyecto
+## Componentes y asignación de pines
 
-- **Tinkered:** las 8 combinaciones de la salida lógica F fueron observadas según la tabla; la etapa del motor requiere verificación eléctrica.
-- **Arduinet:** prueba por código de las 8 combinaciones.
-- **Cirkit Designer:** diagrama de referencia y firmware compilado; su modelo disponible no permitió simular el 2N2222.
-- **Tinkercad:** montaje y validación eléctrica pendientes; es el entorno previsto para la entrega oficial.
+| Elemento | Conexión principal |
+|:--|:--|
+| Interruptores SPDT A, B y C | COM → D2, D3 y D4; selección entre 5 V lógico y GND |
+| LED rojo | D9 → resistencia 300 Ω → ánodo; cátodo → GND |
+| Transistor NPN BJT | D8 → resistencia 1 kΩ → base B; emisor E → GND |
+| Motor DC | Positivo → fuente externa regulada de 5 V; negativo → colector C |
+| Diodo rectificador flyback | En paralelo con motor: cátodo al positivo, ánodo al colector |
+| Referencia de tierra | GND del Arduino unido al negativo de la fuente externa; positivos independientes |
 
-## Dónde está cada cosa
+El transistor y el diodo del simulador son componentes genéricos. Las mediciones observadas no garantizan el dimensionamiento de una implementación física.
 
-- `firmware/arduino/EIC901_Etapa2_Arduino_CPP/`: **código principal `.ino`**; la carpeta y el archivo deben tener el mismo nombre para Arduino IDE.
-- `circuitos/cirkit_designer/`: proyecto editable `.ckt` y diagrama PNG exportado.
-- `circuitos/tinkered/`: exportaciones originales de Tinkered (`wiring.json`, `main.sch`, `main.cpp`, etc.) de cada versión, en subcarpetas separadas.
-- `circuitos/tinkercad/`: enlace al circuito maestro de Tinkercad e instrucciones para reconstrucción.
-- `pruebas/tabla_verdad.md`: resultados esperados y espacio para resultados nuevos de Tinkercad.
-- `pruebas/evidencias/`: evidencias puntuales de pruebas.
-- `capturas/`: capturas ordenadas por partes para el informe.
-- `documentacion/requisitos/`: resúmenes sin datos personales de la Ruta y Tabla 2.
-- `documentacion/diseno/`: esquemas, cálculos, justificaciones y decisiones.
-- `documentacion/informe/`: informe de la Etapa 2, sin datos personales si el repositorio es público.
-- `privado/`: documentos originales, archivos institucionales con nombres/carnés, claves y videos; **no se publican en Git**.
+## Evidencias del prototipo
 
-## Ejecución y validación
+<div align="center">
 
-1. Crear el circuito en Tinkercad (Arduino UNO, entradas, etapa de potencia).
-2. Pegar el código principal en **Código → Texto**.
-3. Simular con los interruptores A/B/C y registrar las ocho filas.
-4. Verificar el LED, D8 y la corriente del motor; no dar por validado el motor solo porque el monitor serial muestre F.
-5. Completar `pruebas/tabla_verdad.md` y archivar las capturas correspondientes.
+**Motor activado · combinación 100**
 
-## Privacidad y publicación
+![F=1 y motor girando](capturas/04_pruebas/05_Prueba_100_F1_Motor_Encendido.png)
 
-No subir nombres completos, carnés, contraseñas, tokens, correos personales ni IP/direcciones internas que no sean necesarias. Para repositorios públicos, revisar el contenido del `.ckt`, imágenes y PDFs antes de hacer `git add`. Se recomienda crear primero el repositorio como **privado** en GitHub.
+**Motor desactivado · combinación 101**
 
-## Este paquete inicial
+![F=0 y motor detenido](capturas/04_pruebas/06_Prueba_101_F0.png)
 
-El paquete ZIP de inicio ya contiene **la versión de `sketch.ino` que compartiste**, copiada a la carpeta de Arduino con el mismo contenido y el nombre de la carpeta; el original se conserva en `firmware/originales_cirkit/sketch.ino`. También contiene el `.ckt` y el PNG que compartiste. La estructura se puede seguir alimentando con nuevas capturas y versiones.
+</div>
 
-Para iniciar Git tras extraer este ZIP, abre Git Bash en esta carpeta y ejecuta `bash scripts/inicializar_git.sh`. Si prefieres que un script cree la estructura desde cero en otra ubicación, descarga `crear_estructura_EIC901_Etapa2_GitBash.sh` por separado.
+| Estado | Fuente | Corriente mostrada | Motor |
+|:--|:--|:--|:--|
+| `F=0` | 5,00 V | 0,00 A | 0 rpm |
+| `F=1` | 5,00 V | aprox. 79,3 mA | Girando |
+
+Las lecturas corresponden a la simulación. La corriente de arranque y las características de una carga física deben verificarse por separado.
+
+**Evidencias:** [entradas](capturas/01_entradas/) · [programa](capturas/02_programa/) · [potencia](capturas/03_potencia/) · [ocho pruebas](capturas/04_pruebas/).
+
+## Aplicación web interactiva
+
+El repositorio incluye una aplicación **React + TypeScript + Vite** que permite explorar:
+
+- Arquitectura del sistema.
+- Diagrama de flujo.
+- Esquema visual.
+- Tabla de verdad interactiva.
+
+Para ejecutarla localmente se requiere **Node.js** y **npm**:
+
+```bash
+cd web/diagramas
+npm ci
+npm run dev
+```
+
+Abrir `http://localhost:5173/` o utilizar el archivo `web/diagramas/INICIAR_EN_WINDOWS.bat` en Windows.
+
+Esta aplicación presenta diagramas y una visualización lógica; no sustituye la simulación eléctrica.
+
+## Proyecto Tinkercad
+
+[**Abrir el circuito y ejecutar la simulación**](https://www.tinkercad.com/things/4VEX9vVvEAo-eic901etapa2sistemaextincionarduinocpp?sharecode=oYl9HFb9AblIeLe8uCefzoiCKroxj-k_aQ0VEF1MGRA)
+
+El código principal se encuentra en [`firmware/arduino/EIC901_Etapa2_Arduino_CPP/`](firmware/arduino/EIC901_Etapa2_Arduino_CPP/). No requiere librerías externas adicionales.
+
+## Organización del repositorio
+
+```text
+assets/                         Portada del proyecto
+capturas/                       Entradas, código, potencia y pruebas
+circuitos/tinkercad/            Referencia a la simulación
+firmware/arduino/               Firmware Arduino C++
+documentacion/diseno/           Diagramas técnicos
+pruebas/                        Tabla de verdad y registro
+web/diagramas/                  Aplicación interactiva React
+```
+
+---
+
+<div align="center">
+
+**EIC901 · Etapa 2 · Sistema de extinción por votación 2 de 3**
+
+*Prototipo académico validado en Tinkercad.*
+
+</div>
