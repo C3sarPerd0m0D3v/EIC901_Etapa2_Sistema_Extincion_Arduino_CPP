@@ -1,14 +1,14 @@
 <div align="center">
 
-!\[Portada ilustrativa del sistema de alarma contra incendios](assets/portada.jpg)
+![Portada ilustrativa del sistema de alarma contra incendios](assets/portada.jpg)
 
 
 
-\### Esquema eléctrico del sistema
+### Esquema eléctrico del sistema
 
 
 
-!\[Esquema electrico EIC901](assets/esquemaelectrico.gif)
+![Esquema electrico EIC901](assets/esquemaelectrico.gif)
 
 
 
@@ -16,10 +16,10 @@
 
 ### Arduino UNO R3 · C++ · Simulación en Tinkercad
 
-!\[Estado](https://img.shields.io/badge/PROTOTIPO-VALIDADO-12745e?style=for-the-badge)
-!\[Pruebas](https://img.shields.io/badge/PRUEBAS-8%2F8-136b9e?style=for-the-badge)
-!\[Hardware](https://img.shields.io/badge/ARDUINO-UNO%20R3-00878f?style=for-the-badge)
-!\[Interfaz](https://img.shields.io/badge/DIAGRAMAS-REACT%20%2B%20TYPESCRIPT-243b64?style=for-the-badge)
+![Estado](https://img.shields.io/badge/PROTOTIPO-VALIDADO-12745e?style=for-the-badge)
+![Pruebas](https://img.shields.io/badge/PRUEBAS-8%2F8-136b9e?style=for-the-badge)
+![Hardware](https://img.shields.io/badge/ARDUINO-UNO%20R3-00878f?style=for-the-badge)
+![Interfaz](https://img.shields.io/badge/DIAGRAMAS-REACT%20%2B%20TYPESCRIPT-243b64?style=for-the-badge)
 
 **Universidad Don Bosco · EIC901 · Etapa 2 · Ciclo 02-2026**
 
@@ -27,7 +27,7 @@
 
 </div>
 
-\---
+---
 
 ## Descripción
 
@@ -37,7 +37,7 @@ La entrada **C** representa un detector de lazo normalmente cerrado: `C=1` indic
 
 ## Arquitectura y diagramas
 
-!\[Arquitectura del sistema](documentacion/diseno/arquitectura-sistema.png)
+![Arquitectura del sistema](documentacion/diseno/arquitectura-sistema.png)
 
 Los diagramas siguientes documentan el diseño y la lógica del prototipo; la referencia para la conexión eléctrica comprobada es el montaje de Tinkercad.
 
@@ -48,18 +48,18 @@ Los diagramas siguientes documentan el diseño y la lógica del prototipo; la re
 |**Esquema visual ilustrativo**|[Ver esquema](documentacion/diseno/esquema-electrico.png)|
 |**Tabla de verdad visual**|[Ver diagrama](documentacion/diseno/tablaDVerdad.png)|
 
-> \*\*Alcance:\*\* el esquema incluido es una representación gráfica documental. Para reproducir conexiones, utilizar el circuito funcional de Tinkercad y verificar eléctricamente cada nodo. No utilizar esta documentación para construir un sistema de protección contra incendios de uso real.
+> **Alcance:** el esquema incluido es una representación gráfica documental. Para reproducir conexiones, utilizar el circuito funcional de Tinkercad y verificar eléctricamente cada nodo. No utilizar esta documentación para construir un sistema de protección contra incendios de uso real.
 
 ## Función lógica
 
 \[
-F = AB + \\overline{C}(A + B)
+F = AB + \overline{C}(A + B)
 ]
 
 Código correspondiente:
 
 ```cpp
-int F = (A \&\& B) || (!C \&\& (A || B));
+int F = (A && B) || (!C && (A || B));
 ```
 
 ### Tabla de verdad verificada
@@ -96,11 +96,11 @@ El transistor y el diodo del simulador son componentes genéricos. Las medicione
 
 **Motor activado · combinación 100**
 
-!\[F=1 y motor girando](capturas/04\_pruebas/05\_Prueba\_100\_F1\_Motor\_Encendido.png)
+![F=1 y motor girando](capturas/04_pruebas/05_Prueba_100_F1_Motor_Encendido.png)
 
 **Motor desactivado · combinación 101**
 
-!\[F=0 y motor detenido](capturas/04\_pruebas/06\_Prueba\_101\_F0.png)
+![F=0 y motor detenido](capturas/04_pruebas/06_Prueba_101_F0.png)
 
 </div>
 
@@ -130,7 +130,7 @@ npm ci
 npm run dev
 ```
 
-Abrir `http://localhost:5173/` o utilizar el archivo `web/diagramas/INICIAR\_EN\_WINDOWS.bat` en Windows.
+Abrir `http://localhost:5173/` o utilizar el archivo `web/diagramas/INICIAR_EN_WINDOWS.bat` en Windows.
 
 Esta aplicación presenta diagramas y una visualización lógica; no sustituye la simulación eléctrica.
 
@@ -138,7 +138,7 @@ Esta aplicación presenta diagramas y una visualización lógica; no sustituye l
 
 [**Abrir el circuito y ejecutar la simulación**](https://www.tinkercad.com/things/4VEX9vVvEAo-eic901etapa2sistemaextincionarduinocpp?sharecode=oYl9HFb9AblIeLe8uCefzoiCKroxj-k_aQ0VEF1MGRA)
 
-El código principal se encuentra en [`firmware/arduino/EIC901\_Etapa2\_Arduino\_CPP/`](firmware/arduino/EIC901_Etapa2_Arduino_CPP/). No requiere librerías externas adicionales.
+El código principal se encuentra en [`firmware/arduino/EIC901_Etapa2_Arduino_CPP/`](firmware/arduino/EIC901_Etapa2_Arduino_CPP/). No requiere librerías externas adicionales.
 
 ## Organización del repositorio
 
@@ -152,7 +152,7 @@ pruebas/                        Tabla de verdad y registro
 web/diagramas/                  Aplicación interactiva React
 ```
 
-\---
+---
 
 <div align="center">
 
