@@ -29,3 +29,7 @@ Desktop.ini
 *.zip
 *.mp4
 *.mov
+
+# Archivos locales excluidos
+/documentacion/diseno/guia_original_transferencia.md
+/firmware/originales_cirkit/sketch.ino
